@@ -1,13 +1,16 @@
 ---
-
+import AccountOnHeader from '../AccountUI/AccountOnHeader.svelte';
 ---
 
 <header>
   <p>SF FOOD TENANT APP</p>
+  <AccountOnHeader client:load />
 </header>
 
 <style lang="scss">
   header {
+    display: flex;
+    justify-content: space-between;
     p {
       font-size: 25px;
     }
