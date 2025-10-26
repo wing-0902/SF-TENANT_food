@@ -1,0 +1,16 @@
+@font-face {
+  font-family: ZenMaru;
+  src: url('/fonts/ZenMaruGothic-Regular.ttf');
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: ZenMaru;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
