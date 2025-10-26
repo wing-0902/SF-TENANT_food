@@ -1,10 +1,6 @@
-# Astro Starter Kit: Minimal
+# SF-TENANT_food
 
-```sh
-pnpm create astro@latest -- --template minimal
-```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+SF 食品企画用注文管理ツール．主に雨天時の使用を想定．
 
 ## 🚀 Project Structure
 
@@ -25,19 +21,23 @@ There's nothing special about `src/components/`, but that's where we like to put
 
 Any static assets, like images, can be placed in the `public/` directory.
 
-## 🧞 Commands
+## 有識者へ
 
-All commands are run from the root of the project, from a terminal:
+こういうコマンドで開発環境を設定します．
 
-| Command                   | Action                                           |
+pnpmとかは自分で入れてください．クラウドIDEやったらデフォで使えるかと．
+
+| コマンド                   | 実行                                           |
 | :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+| `pnpm install`             | 依存関係をインストール（最初にすること）                            |
+| `pnpm dev`             | `localhost:4321`に開発サーバーを開始      |
+| `pnpm build`           | `./dist/`に成果物を出力          |
+| `pnpm preview`         | デプロイ前にプレビューしましょう     |
+| `pnpm astro ...`       | Astro用のコマンドラインツールです．勝手に調べてくれ． |
+| `pnpm astro -- --help` | Astro用のコマンドのヘルプを見るためのコマンド．                     |
 
-## 👀 Want to learn more?
+## Astroについて
+
+ここ見とけ．
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
