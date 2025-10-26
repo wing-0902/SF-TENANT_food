@@ -1,0 +1,28 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/LayoutUI/Header.astro';
+
+interface Props {
+  title?: string;
+}
+
+const {
+  title='SF TENANT APP'
+} = Astro.props;
+---
+
+
+<!doctype HTML>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+    <ClientRouter />
+	</head>
+	<body>
+    <Header />
+		<slot />
+	</body>
+</html>
