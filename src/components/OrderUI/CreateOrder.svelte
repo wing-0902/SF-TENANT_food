@@ -16,7 +16,7 @@
   let editingProductId: string | null = null;
   let editingProduct: Product | null = null;
   
-  // ✅ teamId の絞り込み用に選択された値を保持するセット
+  //　teamId の絞り込み用に選択された値を保持するセット
   let selectedTeamIds: Set<string> = new Set();
 
   // 型定義 (TypeScript向け)
@@ -55,13 +55,13 @@
     }
   });
 
-  // ✅ 1. 全商品からユニークな teamId のリストを抽出
+  // 全商品からユニークな teamId のリストを抽出
   $: allTeamIds = Object.values(products)
     .map(product => product.teamId)
     .filter((value, index, self) => self.indexOf(value) === index)
     .sort(); // アルファベット順などにソートしておくと便利
 
-  // ✅ 2. チェックリストの変更を処理する関数
+  // チェックリストの変更を処理する関数
   function toggleTeamId(teamId: string) {
     if (selectedTeamIds.has(teamId)) {
       selectedTeamIds.delete(teamId);
