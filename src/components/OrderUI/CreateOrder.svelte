@@ -4,7 +4,11 @@
   import { onMount, onDestroy } from 'svelte';
   import IsOrdering from './IsOrdering.svelte';
 
-  let cartInside: string[] = [];
+  $: cartInside = [];
+
+  function addToCart(productId: string) {
+    cartInside.push(productId);
+  };
 
   // --- 変数定義 ---
   let products: { [id: string]: Product } = {}; 
@@ -53,7 +57,7 @@
 
 <section>
   <h1>注文を作成</h1>
-
+  <p>{cartInside}</p>
   <hr />
   <h2>商品一覧 ({productsArray.length} 件)</h2>
   <div class='creating'>
@@ -71,7 +75,8 @@
               {:else}
                 <p>在庫あり</p>
               {/if}
-              <small>ID：{product.id}</small>
+              <small>ID：{product.id}</small><br/>
+              <button on:click={addToCart(`${product.id}`)}>カートに追加</button>
             </div>
           </div>
         {:else}
