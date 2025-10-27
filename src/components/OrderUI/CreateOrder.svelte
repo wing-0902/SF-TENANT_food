@@ -2,24 +2,62 @@
   import { ref, onValue, type DatabaseReference } from "firebase/database";
   import { database } from "../../utils/initializeFirebase.mts";
   import { onMount, onDestroy } from 'svelte';
-  import CartList from './CartList.svelte';
+  // CartListからイベントを受け取るため、on:quantityChange のリスナーを有効にする
+  import CartList from './CartList.svelte'; 
 
-  $: cartInside = [];
+  // --- カートの状態管理 ---
+  // Svelte のリアクティブな状態として定義
+  let cartInside: string[] = []; // 製品IDの配列。重複が数量を表す
 
+  /**
+   * 商品一覧から「カートに追加」ボタンが押されたときの処理
+   * @param productId 追加する製品ID
+   */
   function addToCart(productId: string) {
+    // 常に配列の末尾に追加するだけで数量増加として機能する
     cartInside.push(productId);
-    cartInside = cartInside;
+    // Svelteに配列の変更を検知させるための再代入
+    cartInside = cartInside; 
+    console.log(`[CreateOrder] ${productId} を追加:`, cartInside);
   };
+  
+  /**
+   * CartList から発火された数量変更イベントを処理する
+   */
+  function handleQuantityUpdate(event: CustomEvent<{ productId: string, changeType: 'increase' | 'decrease' | 'remove' }>) {
+    const { productId, changeType } = event.detail;
+    
+    // Svelteのリアクティビティを確保するため、常に新しい配列のコピーを作成
+    let newCart = [...cartInside]; 
+    
+    if (changeType === 'increase') {
+      // 増加: 配列に製品IDを1つ追加
+      newCart.push(productId);
+      
+    } else if (changeType === 'decrease') {
+      // 減少: その製品IDを持つ最初の要素を見つけて削除
+      const indexToRemove = newCart.indexOf(productId);
+      if (indexToRemove !== -1) {
+        newCart.splice(indexToRemove, 1);
+      }
+      
+    } else if (changeType === 'remove') {
+      // 全て削除: その製品IDを持つ要素を全て除外して新しい配列を作成
+      newCart = newCart.filter(id => id !== productId);
+    }
+    
+    // 新しい配列で状態を更新し、UIを再描画させる
+    cartInside = newCart; 
+    console.log(`[CreateOrder] カートが更新されました (${changeType}):`, cartInside);
+  }
 
-  // --- 変数定義 ---
-  let products: { [id: string]: Product } = {}; 
+  // --- 変数定義 (既存のまま) ---
+  let products: { [id: string]: Product } = {};	
+  // ... 既存のコードは省略 ... (編集に関する変数、型定義、Firebaseロジックなど)
   let editingProductId: string | null = null;
   let editingProduct: Product | null = null;
-  
-  //　teamId の絞り込み用に選択された値を保持するセット
   let selectedTeamIds: Set<string> = new Set();
-
-  // 型定義 (TypeScript向け)
+  
   interface Product {
     teamId: string;
     name: string;
@@ -28,18 +66,13 @@
     order: number;
     soldOut: boolean;
   }
-
-  // --- Firebase参照 ---
-  const productsRef: DatabaseReference = ref(database, "products");
   
+  const productsRef: DatabaseReference = ref(database, "products");
   let unsubscribe: (() => void) | undefined;
-
-  // --- リアルタイムデータの購読 ---
+  
   onMount(() => {
     unsubscribe = onValue(productsRef, (snapshot) => {
       products = snapshot.val() || {};
-      
-      // 編集中のデータも最新にするロジックは前回と同様
       if (editingProductId && products[editingProductId]) {
         editingProduct = products[editingProductId];
       } else {
@@ -59,7 +92,7 @@
   $: allTeamIds = Object.values(products)
     .map(product => product.teamId)
     .filter((value, index, self) => self.indexOf(value) === index)
-    .sort(); // アルファベット順などにソートしておくと便利
+    .sort(); 
 
   // チェックリストの変更を処理する関数
   function toggleTeamId(teamId: string) {
@@ -68,7 +101,6 @@
     } else {
       selectedTeamIds.add(teamId);
     }
-    // Svelteに Set の変更を検知させるための再代入
     selectedTeamIds = selectedTeamIds;
   }
 
@@ -76,11 +108,9 @@
   $: productsArray = Object.entries(products)
     .map(([id, product]) => ({ id, ...product }))
     .filter(product => {
-      // selectedTeamIds が空の場合は絞り込みを行わない（全表示）
       if (selectedTeamIds.size === 0) {
         return true;
       }
-      // selectedTeamIds に product.teamId が含まれていれば表示
       return selectedTeamIds.has(product.teamId);
     });
 </script>
@@ -141,7 +171,10 @@
       </div>
     </div>
     <div class='isOrderingSlot'>
-      <CartList cartInside={cartInside} />
+      <CartList 
+        cartInside={cartInside} 
+        on:quantityChange={handleQuantityUpdate} 
+      />
     </div>
   </div>
 </section>
