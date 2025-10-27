@@ -9,7 +9,9 @@
   let editingProduct: Product | null = null;
   
   // 新規追加フォーム用のデータ (teamId も含める)
-  let newProduct: NewProduct = { teamId: 'team01', name: '', price: 0, photoUrl: '', order: 0 };
+  
+  const defaultNewProduct: NewProduct = { teamId: 'team01', name: '', price: 100, photoUrl: 'https://seikosf-food.pages.dev/no-image.jpeg', order: 0 };
+  let newProduct: NewProduct = defaultNewProduct;
   
   // 型定義 (TypeScript向け)
   interface Product {
@@ -58,8 +60,7 @@
     set(newPostRef, newProduct)
       .then(() => {
         console.log("商品を追加しました。");
-        // フォームをクリア (teamId は維持しても良い)
-        newProduct = { teamId: newProduct.teamId, name: '', price: 0, photoUrl: '', order: 0 }; 
+        newProduct = defaultNewProduct;
       })
       .catch(error => console.error("商品追加エラー:", error));
   }
