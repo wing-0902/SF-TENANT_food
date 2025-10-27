@@ -1,0 +1,10 @@
+---
+import RootLayout from "../layout/RootLayout.astro";
+import ProductListView from "../components/OrderUI/ProductList.svelte";
+---
+
+<RootLayout
+  title="商品一覧 | SF TENANT APP"
+>
+  <ProductListView client:load />
+</RootLayout>

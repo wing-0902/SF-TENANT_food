@@ -11,6 +11,8 @@
     slots = snapshot.val() || {};
   });
 
+  
+
 </script>
 
 <section>
