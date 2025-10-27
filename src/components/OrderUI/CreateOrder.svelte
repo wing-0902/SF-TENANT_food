@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ref, onValue, set, push, remove, update, type DatabaseReference } from "firebase/database";
+  import { ref, onValue, type DatabaseReference } from "firebase/database";
   import { database } from "../../utils/initializeFirebase.mts";
   import { onMount, onDestroy } from 'svelte';
   import IsOrdering from './IsOrdering.svelte';
@@ -8,6 +8,7 @@
 
   function addToCart(productId: string) {
     cartInside.push(productId);
+    cartInside = cartInside;
   };
 
   // --- 変数定義 ---
@@ -57,7 +58,6 @@
 
 <section>
   <h1>注文を作成</h1>
-  <p>{cartInside}</p>
   <hr />
   <h2>商品一覧 ({productsArray.length} 件)</h2>
   <div class='creating'>
@@ -85,7 +85,7 @@
       </div>
     </div>
     <div class='isOrderingSlot'>
-      <IsOrdering />
+      <IsOrdering cartInside={cartInside} />
     </div>
   </div>
 </section>

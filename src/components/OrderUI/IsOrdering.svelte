@@ -1,9 +1,10 @@
 <script lang="ts">
-
+  export let cartInside: string[];
 </script>
 
 <div class='cart'>
   <h3>カート</h3>
+  <p>{cartInside}</p>
 </div>
 
 <style lang='scss'>
