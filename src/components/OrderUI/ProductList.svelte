@@ -2,6 +2,7 @@
   import { ref, onValue, set, push, remove, update, type DatabaseReference } from "firebase/database";
   import { database } from "../../utils/initializeFirebase.mts";
   import { onMount, onDestroy } from 'svelte';
+  import firebase from "firebase/compat/app";
 
   // --- 変数定義 ---
   let products: { [id: string]: Product } = {}; 

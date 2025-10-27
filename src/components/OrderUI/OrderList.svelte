@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ref, onValue, set, type DatabaseReference } from "firebase/database";
+  import { ref, onValue, set, type DatabaseReference, update } from "firebase/database";
   import { database } from "../../utils/initializeFirebase.mts";
   import { onMount, onDestroy } from 'svelte';
 
@@ -78,10 +78,21 @@
     }
   });
 
-  // --- ステータス変更ロジック (省略) ---
-  async function updateOrderStatus(orderId: string, newStatus: 'completed' | 'cancelled') { /* ... */ }
+  // --- ステータス変更ロジック ---
+  async function updateOrderStatus(
+    orderId: string,
+    newStatus: 'completed' | 'cancelled')
+  {
+  if (!orderId) return;
+  const orderStatusRef = ref(database, `orders/${orderId}/status`)
+  update(orderStatusRef, newStatus)
+    .then (() => {
+      console.log('ステータスを更新しました')
+    })
+    .catch(error => console.error('ステータス更新エラー', error))
+  }
 
-  // 日付フォーマットヘルパー (省略)
+  // 日付フォーマットヘルパー
   function formatDate(timestamp: number): string { /* ... */ }
   
   /**
