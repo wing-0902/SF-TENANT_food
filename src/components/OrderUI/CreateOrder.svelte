@@ -16,6 +16,9 @@
   let editingProductId: string | null = null;
   let editingProduct: Product | null = null;
   
+  // ✅ teamId の絞り込み用に選択された値を保持するセット
+  let selectedTeamIds: Set<string> = new Set();
+
   // 型定義 (TypeScript向け)
   interface Product {
     teamId: string;
@@ -27,7 +30,6 @@
   }
 
   // --- Firebase参照 ---
-  // すべての商品が格納されている単一のノードを参照
   const productsRef: DatabaseReference = ref(database, "products");
   
   let unsubscribe: (() => void) | undefined;
@@ -36,6 +38,7 @@
   onMount(() => {
     unsubscribe = onValue(productsRef, (snapshot) => {
       products = snapshot.val() || {};
+      
       // 編集中のデータも最新にするロジックは前回と同様
       if (editingProductId && products[editingProductId]) {
         editingProduct = products[editingProductId];
@@ -52,13 +55,66 @@
     }
   });
 
-  // --- 表示用のデータ変換 ---
-  $: productsArray = Object.entries(products).map(([id, product]) => ({ id, ...product }));
+  // ✅ 1. 全商品からユニークな teamId のリストを抽出
+  $: allTeamIds = Object.values(products)
+    .map(product => product.teamId)
+    .filter((value, index, self) => self.indexOf(value) === index)
+    .sort(); // アルファベット順などにソートしておくと便利
+
+  // ✅ 2. チェックリストの変更を処理する関数
+  function toggleTeamId(teamId: string) {
+    if (selectedTeamIds.has(teamId)) {
+      selectedTeamIds.delete(teamId);
+    } else {
+      selectedTeamIds.add(teamId);
+    }
+    // Svelteに Set の変更を検知させるための再代入
+    selectedTeamIds = selectedTeamIds;
+  }
+
+  // --- 表示用のデータ変換と絞り込み ---
+  $: productsArray = Object.entries(products)
+    .map(([id, product]) => ({ id, ...product }))
+    .filter(product => {
+      // selectedTeamIds が空の場合は絞り込みを行わない（全表示）
+      if (selectedTeamIds.size === 0) {
+        return true;
+      }
+      // selectedTeamIds に product.teamId が含まれていれば表示
+      return selectedTeamIds.has(product.teamId);
+    });
 </script>
 
 <section>
   <h1>注文を作成</h1>
   <hr />
+  
+  <div class="filter-controls">
+    <h3>企画で絞り込む</h3>
+    <div class="team-checklist">
+      <label>
+        <input
+          type="checkbox"
+          checked={selectedTeamIds.size === 0}
+          on:change={() => (selectedTeamIds = new Set())}
+        />
+        全て
+      </label>
+      {#each allTeamIds as teamId (teamId)}
+        <label>
+          <input
+            type="checkbox"
+            checked={selectedTeamIds.has(teamId)}
+            on:change={() => toggleTeamId(teamId)}
+          />
+          {teamId}
+        </label>
+      {/each}
+    </div>
+  </div>
+  
+  <hr />
+
   <h2>商品一覧 ({productsArray.length} 件)</h2>
   <div class='creating'>
     <div class='allSlot'>
