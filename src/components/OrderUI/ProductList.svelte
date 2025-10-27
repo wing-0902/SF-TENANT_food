@@ -127,42 +127,67 @@
   <hr />
 
   <h2>商品一覧 ({productsArray.length} 件)</h2>
-  {#each productsArray as product (product.id)}
-    <div class="card product-item">
-      {#if editingProductId === product.id && editingProduct}
-        <div class="edit-mode">
-          <h3>{editingProduct.name} の編集中...</h3>
-          <p><strong>企画名：{editingProduct.teamId}</strong></p>
-          <label for='editTeamName'>企画名</label>
-          <input id='editTeamName' type="text" placeholder="企画ID" bind:value={editingProduct.teamId} /><br/>
-          <label for='editName'>商品名</label>
-          <input id='editName' type="text" placeholder="商品名" bind:value={editingProduct.name} /><br/>
-          <label for='editPrice'>価格</label>
-          <input id='editPrice' type="number" placeholder="価格" bind:value={editingProduct.price} /><br/>
-          <label for='editPhoto'>写真URL</label>
-          <input type="text" placeholder="写真URL" bind:value={editingProduct.photoUrl} /><br/>
-          <label for='editNum'>注文数</label>
-          <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.order} />
-          <div class="actions">
-            <button on:click={saveEdit} class="save-btn">保存</button>
-            <button on:click={cancelEdit} class="cancel-btn">キャンセル</button>
+  <div class='allProductLists'>
+    {#each productsArray as product (product.id)}
+      <div class="product-item">
+        {#if editingProductId === product.id && editingProduct}
+          <div class="edit-mode">
+            <h3>{editingProduct.name} の編集中...</h3>
+            <p><strong>企画名：{editingProduct.teamId}</strong></p>
+            <label for='editTeamName'>企画名</label>
+            <input id='editTeamName' type="text" placeholder="企画ID" bind:value={editingProduct.teamId} /><br/>
+            <label for='editName'>商品名</label>
+            <input id='editName' type="text" placeholder="商品名" bind:value={editingProduct.name} /><br/>
+            <label for='editPrice'>価格</label>
+            <input id='editPrice' type="number" placeholder="価格" bind:value={editingProduct.price} /><br/>
+            <label for='editPhoto'>写真URL</label>
+            <input type="text" placeholder="写真URL" bind:value={editingProduct.photoUrl} /><br/>
+            <label for='editNum'>注文数</label>
+            <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.order} />
+            <div class="actions">
+              <button on:click={saveEdit} class="save-btn">保存</button>
+              <button on:click={cancelEdit} class="cancel-btn">キャンセル</button>
+            </div>
           </div>
-        </div>
 
-      {:else}
-        <div class="display-mode">
-          <h3>{product.name} (企画：{product.teamId})</h3>
-          <p>価格：¥{product.price.toLocaleString()}</p>
-          <p>注文数：{product.order}</p>
-          <small>ID：{product.id}</small>
-          <div class="actions">
-            <button on:click={() => startEdit(product.id)}>編集</button>
-            <button on:click={() => deleteProduct(product.id)} class="delete-btn">削除</button>
+        {:else}
+          <div class="display-mode">
+            <h3>{product.name} (企画：{product.teamId})</h3>
+            <p>価格：¥{product.price.toLocaleString()}</p>
+            <p>注文数：{product.order}</p>
+            <small>ID：{product.id}</small>
+            <div class="actions">
+              <button on:click={() => startEdit(product.id)}>編集</button>
+              <button on:click={() => deleteProduct(product.id)} class="delete-btn">削除</button>
+            </div>
           </div>
-        </div>
-      {/if}
-    </div>
-  {:else}
-    <p>商品がありません。</p>
-  {/each}
+        {/if}
+      </div>
+    {:else}
+      <p>商品がありません。</p>
+    {/each}
+  </div>
 </section>
+
+<style lang='scss'>
+  .allProductLists {
+    .product-item {
+      border: 1px solid black;
+      margin: 2px;
+      width: 300px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      text-align: center;
+      border-radius: 20px 8px;
+      .edit-mode {
+        h3, p, small {
+          margin: 5px auto;
+        }
+      }
+    }
+  }
+</style>
