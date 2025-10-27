@@ -83,13 +83,15 @@
     orderId: string,
     newStatus: 'completed' | 'cancelled')
   {
-  if (!orderId) return;
-  const orderStatusRef = ref(database, `orders/${orderId}/status`)
-  update(orderStatusRef, newStatus)
-    .then (() => {
-      console.log('ステータスを更新しました')
+    if (!orderId) return;
+    const orderStatusRef = ref(database, `orders/${orderId}`)
+    orderStatusRef.update({
+      status: newStatus
     })
-    .catch(error => console.error('ステータス更新エラー', error))
+      .then (() => {
+        console.log('ステータスを更新しました')
+      })
+      .catch(error => console.error('ステータス更新エラー', error))
   }
 
   // 日付フォーマットヘルパー
