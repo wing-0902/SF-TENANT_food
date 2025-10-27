@@ -10,7 +10,14 @@
   
   // 新規追加フォーム用のデータ (teamId も含める)
   
-  const defaultNewProduct: NewProduct = { teamId: 'team01', name: '', price: 100, photoUrl: 'https://seikosf-food.pages.dev/no-image.jpeg', order: 0 };
+  const defaultNewProduct: NewProduct = {
+    teamId: 'team01',
+    name: '',
+    price: 100,
+    photoUrl: 'https://seikosf-food.pages.dev/no-image.jpeg',
+    order: 200,
+    soldOut: false,
+  };
   let newProduct: NewProduct = defaultNewProduct;
   
   // 型定義 (TypeScript向け)
@@ -20,6 +27,7 @@
     price: number;
     photoUrl: string;
     order: number;
+    soldOut: boolean;
   }
   interface NewProduct extends Product {}
 
@@ -119,8 +127,8 @@
     <input id='価格追加' type="number" placeholder="価格" bind:value={newProduct.price} required /><span>円</span><br/>
     <label for='写真URL追加'>写真URL</label>
     <input id='写真URL追加' type="text" placeholder="写真URL" bind:value={newProduct.photoUrl} /><br/>
-    <label for='注文数追加'>注文数（初期値は０個）</label>
-    <input id='注文数追加' type="number" placeholder="注文数" bind:value={newProduct.order} /><span>個</span><br/>
+    <label for='注文数追加'>在庫数</label>
+    <input id='注文数追加' type="number" placeholder="在庫数" bind:value={newProduct.order} /><span>個</span><br/>
     <button on:click={addProduct}>商品を追加</button>
   </div>
   
@@ -142,8 +150,10 @@
             <input id='editPrice' type="number" placeholder="価格" bind:value={editingProduct.price} /><br/>
             <label for='editPhoto'>写真URL</label>
             <input type="text" placeholder="写真URL" bind:value={editingProduct.photoUrl} /><br/>
-            <label for='editNum'>注文数</label>
-            <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.order} />
+            <label for='editNum'>在庫数</label>
+            <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.order} /><br/>
+            <input type="checkbox" bind:checked={editingProduct.soldOut}>
+            <label for='soldOutCheck'>売り切れ</label>
             <div class="actions">
               <button on:click={saveEdit} class="save-btn">保存</button>
               <button on:click={cancelEdit} class="cancel-btn">キャンセル</button>
@@ -154,7 +164,12 @@
           <div class="display-mode">
             <h3>{product.name} (企画：{product.teamId})</h3>
             <p>価格：¥{product.price.toLocaleString()}</p>
-            <p>注文数：{product.order}</p>
+            <p>在庫数：{product.order}</p>
+            {#if (product.soldOut)}
+              <p>売り切れ</p>
+            {:else}
+              <p>在庫あり</p>
+            {/if}
             <small>ID：{product.id}</small>
             <div class="actions">
               <button on:click={() => startEdit(product.id)}>編集</button>
