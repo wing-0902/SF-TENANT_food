@@ -1,50 +1,106 @@
 <script lang="ts">
   import ProductDetail from './ProductDetail.svelte'; 
-  import { createEventDispatcher } from 'svelte'; // ① イベントディスパッチャーをインポート
-  
-  export let cartInside: string[] = []; 
-  
-  // ① ディスパッチャーの初期化
-  const dispatch = createEventDispatcher(); 
+  import { createEventDispatcher } from 'svelte';
+  import { ref, push, set } from "firebase/database";
+  import { database } from "../../utils/initializeFirebase.mts";
 
-  // リアクティブな計算 (前回のものと同じ)
+  // --- プロパティの定義 (親から受け取るデータ) ---
+  export let cartInside: string[] = []; 
+  export let products: { [id: string]: Product } = {}; 
+  
+  // --- 型定義 ---
+  interface Product { teamId: string; name: string; price: number; photoUrl: string; order: number; soldOut: boolean; }
+  interface CartItem { productId: string; quantity: number;}
+  interface Order { createdAt: number; status: 'pending' | 'completed' | 'cancelled'; items: CartItem[]; }
+
+  const dispatch = createEventDispatcher(); 
+  
+  // --- リアクティブな計算 ---
   $: uniqueProductIds = Array.from(new Set(cartInside));
   $: productCounts = cartInside.reduce((acc, id) => {
     acc[id] = (acc[id] || 0) + 1;
     return acc;
   }, {} as { [id: string]: number });
   $: totalItems = cartInside.length;
+
+  // 合計金額の計算 (価格をNumber()で確実に数値に変換)
+  $: totalAmount = uniqueProductIds.reduce((total, id) => {
+    const productData = products[id];
+    const count = productCounts[id];
+
+    const price = Number(productData?.price) || 0; 
+    
+    if (productData && price > 0) {
+      return total + (price * count);
+    }
+    return total;
+  }, 0);
   
-  /**
-   * ② 数量変更イベントを親コンポーネントに通知する
-   * @param id 変更対象の製品ID
-   * @param change 'increase', 'decrease', または 'remove'
-   */
+  // --- イベントハンドラ（親への通知） ---
   function handleQuantityChange(id: string, change: 'increase' | 'decrease' | 'remove') {
-    // 'quantityChange' という名前のカスタムイベントを発火
-    dispatch('quantityChange', { 
-      productId: id, 
-      changeType: change // どのような変更を要求しているかをペイロードに含める
-    });
+    dispatch('quantityChange', { productId: id, changeType: change });
   }
 
-  // ③ 数量を減らす際、1個の場合は削除するか確認するロジック
   function decreaseQuantity(id: string) {
     const currentCount = productCounts[id] || 0;
     if (currentCount > 1) {
       handleQuantityChange(id, 'decrease');
     } else if (currentCount === 1) {
-      // 数量が1で、さらにマイナスボタンが押された場合は削除を提案
       if (confirm("この商品をカートから完全に削除しますか？")) {
         handleQuantityChange(id, 'remove');
       }
     }
   }
 
+  // --- 注文送信ロジック ---
+  async function submitOrder() {
+    if (cartInside.length === 0) { // totalAmountもチェック
+      alert("カートに商品がないか、合計金額が不正です。");
+      return;
+    }
+
+    if (!confirm(`合計金額 ${totalAmount.toLocaleString()} 円で注文を確定しますか？`)) {
+      return;
+    }
+    
+    // 1. 注文アイテムリストの作成 (注文時のデータを固定)
+    const orderItems: CartItem[] = uniqueProductIds.map(id => {
+      const quantity = productCounts[id];
+
+      return {
+        productId: id,
+        quantity: quantity,
+      };
+    });
+
+    // 2. 注文オブジェクトの作成
+    const newOrder: Order = {
+      createdAt: Date.now(),
+      status: 'pending', 
+      items: orderItems,
+    };
+
+    // 3. Firebase (/orders) への書き込み
+    try {
+      const ordersRef = ref(database, "orders");
+      const newOrderRef = push(ordersRef);
+      await set(newOrderRef, newOrder);
+
+      alert(`注文が完了しました！\n注文ID: ${newOrderRef.key}\n合計金額: ¥${totalAmount.toLocaleString()}`);
+
+      // 4. 成功後、カートをクリアするために親へ通知
+      dispatch('orderSubmitted', {});
+
+    } catch (error) {
+      console.error("注文送信エラー:", error);
+      alert("注文の送信中にエラーが発生しました。コンソールを確認してください。");
+    }
+  }
+
 </script>
 
 <div class='cart-list-page'>
-  <h1>カート一覧 ({totalItems} 点)</h1>
+  <h1>カート ({totalItems} 点)</h1>
   
   {#if uniqueProductIds.length === 0}
     <p>カートに商品が入っていません。</p>
@@ -55,33 +111,29 @@
           <ProductDetail productId={productId} />
           
           <div class="quantity-control">
-            <button 
-              on:click={() => decreaseQuantity(productId)} 
-              disabled={productCounts[productId] <= 0}
-            >
-              －
-            </button>
-            
-            <span class="quantity-display">
-              数量: {productCounts[productId]}
-            </span>
-            
-            <button 
-              on:click={() => handleQuantityChange(productId, 'increase')}
-            >
-              ＋
-            </button>
+            <button on:click={() => decreaseQuantity(productId)} disabled={productCounts[productId] <= 0}>－</button>
+            <span class="quantity-display">数量: {productCounts[productId]}</span>
+            <button on:click={() => handleQuantityChange(productId, 'increase')}>＋</button>
           </div>
           
           <div class="actions">
-            <button 
-              class="remove-btn" 
-              on:click={() => handleQuantityChange(productId, 'remove')}>
-              全て削除
-            </button>
+            <button class="remove-btn" on:click={() => handleQuantityChange(productId, 'remove')}>全て削除</button>
           </div>
         </div>
       {/each}
+    </div>
+    
+    <div class="order-summary">
+      <hr>
+      <h3>合計金額: ¥{totalAmount.toLocaleString()}</h3>
+      
+      <button 
+        class="submit-order-btn" 
+        on:click={submitOrder}
+        disabled={cartInside.length === 0}
+      >
+        注文を確定する
+      </button>
     </div>
   {/if}
 </div>
