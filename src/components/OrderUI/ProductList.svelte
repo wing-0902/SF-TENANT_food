@@ -111,7 +111,7 @@
 
   <div class="card add-form">
     <h2>新しい商品を追加</h2>
-    <label for='企画ID追加'>企画ID</label>
+    <label for='企画ID追加'>企画名</label>
     <input id='企画ID追加' type="text" placeholder="企画ID" bind:value={newProduct.teamId} required /><br/>
     <label for='商品名追加'>商品名</label>
     <input id='商品名追加' type="text" placeholder="商品名" bind:value={newProduct.name} required /><br/>
@@ -132,13 +132,17 @@
       {#if editingProductId === product.id && editingProduct}
         <div class="edit-mode">
           <h3>{editingProduct.name} の編集中...</h3>
-          <p><strong>Team ID: {editingProduct.teamId}</strong></p>
-          <input type="text" placeholder="チームID" bind:value={editingProduct.teamId} /> 
-          <input type="text" placeholder="名前" bind:value={editingProduct.name} />
-          <input type="number" placeholder="価格" bind:value|number={editingProduct.price} />
-          <input type="text" placeholder="写真URL" bind:value={editingProduct.photoUrl} />
-          <input type="number" placeholder="注文数" bind:value|number={editingProduct.order} />
-          
+          <p><strong>企画名：{editingProduct.teamId}</strong></p>
+          <label for='editTeamName'>企画名</label>
+          <input id='editTeamName' type="text" placeholder="企画ID" bind:value={editingProduct.teamId} /><br/>
+          <label for='editName'>商品名</label>
+          <input id='editName' type="text" placeholder="商品名" bind:value={editingProduct.name} /><br/>
+          <label for='editPrice'>価格</label>
+          <input id='editPrice' type="number" placeholder="価格" bind:value={editingProduct.price} /><br/>
+          <label for='editPhoto'>写真URL</label>
+          <input type="text" placeholder="写真URL" bind:value={editingProduct.photoUrl} /><br/>
+          <label for='editNum'>注文数</label>
+          <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.order} />
           <div class="actions">
             <button on:click={saveEdit} class="save-btn">保存</button>
             <button on:click={cancelEdit} class="cancel-btn">キャンセル</button>
@@ -147,11 +151,10 @@
 
       {:else}
         <div class="display-mode">
-          <h3>{product.name} (チーム: {product.teamId})</h3>
-          <p>価格: ¥{product.price.toLocaleString()}</p>
-          <p>注文数: {product.order}</p>
-          <small>ID: {product.id}</small>
-
+          <h3>{product.name} (企画：{product.teamId})</h3>
+          <p>価格：¥{product.price.toLocaleString()}</p>
+          <p>注文数：{product.order}</p>
+          <small>ID：{product.id}</small>
           <div class="actions">
             <button on:click={() => startEdit(product.id)}>編集</button>
             <button on:click={() => deleteProduct(product.id)} class="delete-btn">削除</button>
