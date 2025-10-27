@@ -162,7 +162,8 @@
 
         {:else}
           <div class="display-mode">
-            <h3>{product.name} (企画：{product.teamId})</h3>
+            <h3>{product.name}</h3>
+            <p>企画：{product.teamId}</p>
             <p>価格：¥{product.price.toLocaleString()}</p>
             <p>在庫数：{product.order}</p>
             {#if (product.soldOut)}
