@@ -13,11 +13,14 @@ const firebaseConfig = {
   projectId: "sf-tenant-food",
   storageBucket: "sf-tenant-food.firebasestorage.app",
   messagingSenderId: "204348098401",
-  appId: "1:204348098401:web:378cb44a0f831f1a65e720"
+  appId: "1:204348098401:web:378cb44a0f831f1a65e720",
+  databaseURL: "https://sf-tenant-food-default-rtdb.asia-southeast1.firebasedatabase.app",
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = !getApps().length
+  ? initializeApp(firebaseConfig)
+  : getApp(); // 既に初期化済みのアプリを取得
 
 export const auth = getAuth(app);
 export const database = getDatabase(app);
