@@ -26,12 +26,6 @@
     return parts[0];
   }
   $:userGroup = getUsernameFromEmail(userId);
-
-  onDestroy(() => {
-    if (unsubscribe) {
-      unsubscribe();
-    }
-  });
 </script>
 
 <section>
