@@ -171,10 +171,13 @@
 
 <style lang='scss'>
   .allProductLists {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     .product-item {
       border: 1px solid black;
       margin: 2px;
-      width: 300px;
+      width: 320px;
       height: 300px;
       display: flex;
       flex-direction: column;
