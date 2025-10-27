@@ -109,12 +109,17 @@
   <h2>商品管理画面 (全チーム)</h2>
 
   <div class="card add-form">
-    <h3>🚀 新しい商品を追加</h3>
-    <input type="text" placeholder="チームID (teamId)" bind:value={newProduct.teamId} required />
-    <input type="text" placeholder="名前 (name)" bind:value={newProduct.name} required />
-    <input type="number" placeholder="価格 (price)" bind:value|number={newProduct.price} required />
-    <input type="text" placeholder="写真URL (photoUrl)" bind:value={newProduct.photoUrl} />
-    <input type="number" placeholder="初期注文数 (order)" bind:value|number={newProduct.order} />
+    <h3>新しい商品を追加</h3>
+    <label for='企画ID追加'>企画ID</label>
+    <input id='企画ID追加' type="text" placeholder="企画ID" bind:value={newProduct.teamId} required /><br/>
+    <label for='商品名追加'>商品名</label>
+    <input id='商品名追加' type="text" placeholder="商品名" bind:value={newProduct.name} required /><br/>
+    <label for='価格追加'>価格</label>
+    <input id='価格追加' type="number" placeholder="価格" bind:value={newProduct.price} required /><span>円</span><br/>
+    <label for='写真URL追加'>写真URL</label>
+    <input id='写真URL追加' type="text" placeholder="写真URL" bind:value={newProduct.photoUrl} /><br/>
+    <label for='注文数追加'>注文数（初期値は０個）</label>
+    <input id='注文数追加' type="number" placeholder="注文数" bind:value={newProduct.order} /><span>個</span><br/>
     <button on:click={addProduct}>商品を追加</button>
   </div>
   
