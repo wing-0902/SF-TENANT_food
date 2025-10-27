@@ -15,7 +15,7 @@
 
   // --- 状態変数 ---
   let orders: Order[] = []; 
-  // ⭐ 新規追加: 全製品データを格納する
+  // 新規追加: 全製品データを格納する
   let products: { [id: string]: Product } = {}; 
   let isLoading: boolean = true;
   let unsubscribeOrders: (() => void) | undefined;
@@ -46,7 +46,7 @@
       isLoading = false;
     });
 
-    // ⭐ 2. 製品データ (/products) の購読 (新規追加)
+    // 2. 製品データ (/products) の購読 (新規追加)
     const productsRef: DatabaseReference = ref(database, "products");
     unsubscribeProducts = onValue(productsRef, (snapshot) => {
       // 注文一覧では価格は不要だが、CreateOrder.svelteに合わせて安全のため型変換を行う
@@ -113,13 +113,24 @@
           <ul class="item-list">
             {#each order.items as item}
               <li>
-                **{getProductName(item.productId)}** ({item.quantity} 個)
+                {item.quantity} 個 (商品ID: {item.productId.substring(0, 5)}...)
               </li>
             {/each}
           </ul>
 
           <div class="actions">
-            </div>
+            <button 
+              class="complete-btn" 
+              on:click={() => updateOrderStatus(order.id, 'completed')}>
+              提供済みにする
+            </button>
+            
+            <button 
+              class="cancel-btn" 
+              on:click={() => updateOrderStatus(order.id, 'cancelled')}>
+              キャンセル
+            </button>
+          </div>
         </div>
       {/each}
     </div>
