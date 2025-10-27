@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/LayoutUI/Header.astro';
+import Footer from '../components/LayoutUI/Footer.astro';
 import '../styles/globals.scss';
 
 interface Props {
@@ -27,6 +28,7 @@ const {
     <div class="slotSlot">
 		  <slot />
     </div>
+    <Footer />
 	</body>
 </html>
 
@@ -37,6 +39,6 @@ const {
   }
 
   .slotSlot {
-    margin: 100px 30px 0;
+    margin: 100px 30px 20px;
   }
 </style>
