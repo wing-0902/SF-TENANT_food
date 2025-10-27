@@ -1,0 +1,10 @@
+---
+import RootLayout from "../layout/RootLayout.astro";
+import CreateOrder from '../components/OrderUI/CreateOrder.svelte';
+---
+
+<RootLayout
+  title="注文を作成 | SF TENANT APP"
+>
+  <CreateOrder client:load />
+</RootLayout>
