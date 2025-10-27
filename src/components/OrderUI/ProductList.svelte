@@ -15,7 +15,7 @@
   
   // 型定義 (TypeScript向け)
   interface Product {
-    teamId: string; // チームIDを追加
+    teamId: string;
     name: string;
     price: number;
     photoUrl: string;
