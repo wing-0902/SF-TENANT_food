@@ -1,0 +1,10 @@
+---
+import RootLayout from "../layout/RootLayout.astro";
+import StoreManagement from '../components/OrderUI/StoreManagement.svelte';
+---
+
+<RootLayout
+  title="注文を受け付ける"
+>
+  <StoreManagement client:load />
+</RootLayout>
