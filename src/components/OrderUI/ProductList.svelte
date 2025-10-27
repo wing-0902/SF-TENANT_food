@@ -106,10 +106,10 @@
 </script>
 
 <section>
-  <h2>商品管理画面 (全チーム)</h2>
+  <h1>商品管理画面 （全企画）</h1>
 
   <div class="card add-form">
-    <h3>新しい商品を追加</h3>
+    <h2>新しい商品を追加</h2>
     <label for='企画ID追加'>企画ID</label>
     <input id='企画ID追加' type="text" placeholder="企画ID" bind:value={newProduct.teamId} required /><br/>
     <label for='商品名追加'>商品名</label>
@@ -125,12 +125,12 @@
   
   <hr />
 
-  <h3>商品一覧 ({productsArray.length} 件)</h3>
+  <h2>商品一覧 ({productsArray.length} 件)</h2>
   {#each productsArray as product (product.id)}
     <div class="card product-item">
       {#if editingProductId === product.id && editingProduct}
         <div class="edit-mode">
-          <h4>{editingProduct.name} の編集中...</h4>
+          <h3>{editingProduct.name} の編集中...</h3>
           <p><strong>Team ID: {editingProduct.teamId}</strong></p>
           <input type="text" placeholder="チームID" bind:value={editingProduct.teamId} /> 
           <input type="text" placeholder="名前" bind:value={editingProduct.name} />
@@ -146,7 +146,7 @@
 
       {:else}
         <div class="display-mode">
-          <h4>{product.name} (チーム: {product.teamId})</h4>
+          <h3>{product.name} (チーム: {product.teamId})</h3>
           <p>価格: ¥{product.price.toLocaleString()}</p>
           <p>注文数: {product.order}</p>
           <small>ID: {product.id}</small>
