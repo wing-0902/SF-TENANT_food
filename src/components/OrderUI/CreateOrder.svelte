@@ -2,7 +2,7 @@
   import { ref, onValue, type DatabaseReference } from "firebase/database";
   import { database } from "../../utils/initializeFirebase.mts";
   import { onMount, onDestroy } from 'svelte';
-  import IsOrdering from './IsOrdering.svelte';
+  import CartList from './CartList.svelte';
 
   $: cartInside = [];
 
@@ -141,7 +141,7 @@
       </div>
     </div>
     <div class='isOrderingSlot'>
-      <IsOrdering cartInside={cartInside} />
+      <CartList cartInside={cartInside} />
     </div>
   </div>
 </section>
