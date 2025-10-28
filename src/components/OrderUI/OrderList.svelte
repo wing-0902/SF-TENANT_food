@@ -79,20 +79,25 @@
   });
 
   // --- ステータス変更ロジック ---
-  async function updateOrderStatus(
-    orderId: string,
-    newStatus: 'completed' | 'cancelled')
-  {
-    if (!orderId) return;
-    const orderStatusRef = ref(database, `orders/${orderId}`)
-    orderStatusRef.update({
-      status: newStatus
+// --- ステータス変更ロジック ---
+async function updateOrderStatus(
+  orderId: string,
+  newStatus: 'completed' | 'cancelled')
+{
+  if (!orderId) return;
+
+  // 1. 更新したいデータへの参照を作成
+  const orderRef: DatabaseReference = ref(database, `orders/${orderId}`);
+
+  // 2. インポートした update 関数を (参照, データ) の形式で呼び出す
+  await update(orderRef, {
+    status: newStatus
+  })
+    .then (() => {
+      console.log('ステータスを更新しました');
     })
-      .then (() => {
-        console.log('ステータスを更新しました')
-      })
-      .catch(error => console.error('ステータス更新エラー', error))
-  }
+    .catch(error => console.error('ステータス更新エラー', error));
+}
 
   // 日付フォーマットヘルパー
   function formatDate(timestamp: number): string { /* ... */ }
