@@ -19,5 +19,7 @@
   <p>ロール：{userRole}</p>
   {#if (userRole === "admin")}
     <p>オーダを受け付けるには<a href='/order/'>こちら</a></p>
+  {:else}
+    <p>店舗側UI（注文を閲覧し，チェックマークを付けます）は<a href='/tenant/'>こちら</a></p>
   {/if}
 </div>
