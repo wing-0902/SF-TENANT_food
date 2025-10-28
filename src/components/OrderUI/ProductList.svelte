@@ -133,7 +133,7 @@
     <label for='写真URL追加'>写真URL</label>
     <input id='写真URL追加' type="text" placeholder="写真URL" bind:value={newProduct.photoUrl} /><br/>
     <label for='注文数追加'>在庫数</label>
-    <input id='注文数追加' type="number" placeholder="在庫数" bind:value={newProduct.order} /><span>個</span><br/>
+    <input id='注文数追加' type="number" placeholder="在庫数" bind:value={newProduct.maxOrder} /><span>個</span><br/>
     <button on:click={addProduct}>商品を追加</button>
   </div>
   
@@ -156,7 +156,7 @@
             <label for='editPhoto'>写真URL</label>
             <input type="text" placeholder="写真URL" bind:value={editingProduct.photoUrl} /><br/>
             <label for='editNum'>在庫数</label>
-            <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.order} /><br/>
+            <input id='editNum' type="number" placeholder="注文数" bind:value={editingProduct.maxOrder} /><br/>
             <input type="checkbox" bind:checked={editingProduct.soldOut}>
             <label for='soldOutCheck'>売り切れ</label>
             <div class="actions">
@@ -170,7 +170,7 @@
             <h3>{product.name}</h3>
             <p>企画：{product.teamId}</p>
             <p>価格：¥{product.price.toLocaleString()}</p>
-            <p>在庫数：{product.order}</p>
+            <p>在庫数：{product.maxOrder}</p>
             <p>販売済：{product.alreadyServed}</p>
             {#if (product.soldOut)}
               <p>売り切れ</p>
