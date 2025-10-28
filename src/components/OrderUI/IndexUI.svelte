@@ -1,4 +1,4 @@
-<Rolscript lang='ts'>
+<script lang='ts'>
   import { getAuth } from "firebase/auth";
   import { メールアドレスを分割, ロールを判定 } from "./splitEmailAddress.mts";
 
