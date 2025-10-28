@@ -29,7 +29,7 @@
     name: string;
     price: number;
     photoUrl: string;
-    maxOrder: number
+    maxOrder: number;
     order: number;
     alreadyServed: number;
     soldOut: boolean;

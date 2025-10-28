@@ -1,10 +1,11 @@
 ---
 import RootLayout from "../layout/RootLayout.astro";
-
+import OrderUI from '../components/OrderUI/OrderUI.svelte';
 ---
 
 <RootLayout
   title="注文を受け付ける | SF TENANT APP"
 >
   <h1>注文を受け付ける</h1>
+  <OrderUI client:load />
 </RootLayout>
