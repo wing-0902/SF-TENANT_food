@@ -14,6 +14,6 @@ export function ロールを判定(userNameFromMail: string): string {
   if ( allowedAdminUser.includes(userNameFromMail)) {
     return 'admin';
   } else {
-    return 'userNameFromMail';
+    return userNameFromMail;
   }
 };
