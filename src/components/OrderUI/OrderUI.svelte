@@ -94,7 +94,7 @@
               <td>{product.maxOrder}</td>
               <td>{product.order}</td>
               <td>{product.alreadyServed}</td>
-              <td></td>
+              <td>あとで書くから待って</td>
               <td>
                 <button on:click={() => updateOrderCount((product.id), -1, (product.alreadyServed))}>
                   ↓
