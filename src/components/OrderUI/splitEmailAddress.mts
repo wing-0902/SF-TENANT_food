@@ -3,7 +3,7 @@ const allowedAdminUser: string[] = [
   'admin',
   'guest',
   'test',
-]
+];
 
 export function メールアドレスを分割(address: string): string {
   const parts = address.split('@');
