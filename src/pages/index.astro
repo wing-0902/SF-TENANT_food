@@ -1,9 +1,9 @@
 ---
 import RootLayout from "../layout/RootLayout.astro";
+import IndexUI from "../components/OrderUI/IndexUI.svelte";
 ---
 
 <RootLayout>
   <p>商品一覧の編集は<a href="/productList/">こちら</a></p>
-  <p>店舗側の画面は<a href="/receiveOrder/">こちら</a></p>
-  <p>注文の作成は<a href="/makeOrder/">こちら</a></p>
+  <IndexUI client:only />
 </RootLayout>
