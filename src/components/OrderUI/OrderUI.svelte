@@ -79,6 +79,7 @@
           <tr>
             <th>企画ID</th>
             <th>商品名</th>
+            <th>価格</th>
             <th>在庫数</th>
             <th>累計注文数</th>
             <th>累計提供数</th>
@@ -91,6 +92,7 @@
             <tr>
               <td>{product.teamId}</td>
               <td>{product.name}</td>
+              <td>¥{product.price}</td>
               <td>{product.maxOrder}</td>
               <td>{product.order}</td>
               <td>{product.alreadyServed}</td>
