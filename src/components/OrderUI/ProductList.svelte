@@ -17,6 +17,7 @@
     price: 100,
     photoUrl: 'https://seikosf-food.pages.dev/no-image.jpeg',
     order: 200,
+    alreadyServed: 0,
     soldOut: false,
   };
   let newProduct: NewProduct = defaultNewProduct;
@@ -28,6 +29,7 @@
     price: number;
     photoUrl: string;
     order: number;
+    alreadyServed: number;
     soldOut: boolean;
   }
   interface NewProduct extends Product {}
@@ -167,6 +169,7 @@
             <p>企画：{product.teamId}</p>
             <p>価格：¥{product.price.toLocaleString()}</p>
             <p>在庫数：{product.order}</p>
+            <p>販売済：{product.alreadyServed}</p>
             {#if (product.soldOut)}
               <p>売り切れ</p>
             {:else}
@@ -203,6 +206,11 @@
       max-width: 100%;
       text-align: center;
       border-radius: 20px 8px;
+      .display-mode {
+        h3, small, p {
+          margin: 10px auto;
+        }
+      }
       .edit-mode {
         h3, p, small {
           margin: 5px auto;
