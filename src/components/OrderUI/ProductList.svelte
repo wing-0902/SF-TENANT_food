@@ -16,7 +16,8 @@
     name: '',
     price: 100,
     photoUrl: 'https://seikosf-food.pages.dev/no-image.jpeg',
-    order: 200,
+    maxOrder: 200,
+    order: 0,
     alreadyServed: 0,
     soldOut: false,
   };
@@ -28,6 +29,7 @@
     name: string;
     price: number;
     photoUrl: string;
+    maxOrder: number
     order: number;
     alreadyServed: number;
     soldOut: boolean;
