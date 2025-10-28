@@ -103,6 +103,8 @@
   function getProductName(productId: string): string {
     return products[productId]?.name || '（製品名が見つかりません）';
   }
+
+  import ProductDetail from "./ProductDetail.svelte";
 </script>
 
 <div class="order-list-admin">
@@ -127,6 +129,7 @@
             {#each order.items as item}
               <li>
                 {item.quantity} 個 (商品ID: {item.productId.substring(0, 5)}...)
+                <ProductDetail productId={item.productId} />
               </li>
             {/each}
           </ul>
