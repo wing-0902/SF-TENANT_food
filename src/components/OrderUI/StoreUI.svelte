@@ -65,6 +65,12 @@
       return Math.min(waiting, newValue);
     });
   }
+
+  $: targetTeamId = userRole !== 'admin' ? userRole : 'all';
+
+  $: filteredProductsArray = (targetTeamId === 'all')
+    ? productsArray
+    : productsArray.filter(product => product.teamId === targetTeamId);
 </script>
 
 <section>
@@ -73,7 +79,7 @@
     <div class='ok200'>
       <h2>待機中の注文一覧</h2>
       <div>
-        {#each productsArray as product (product.id)}
+        {#each filteredProductsArray as product (product.id)}
           <button on:click={() => update提供済みCount((product.id), 1, (product.order))}>
             <small>{product.teamId}</small>
             <h3>{product.name}</h3>
