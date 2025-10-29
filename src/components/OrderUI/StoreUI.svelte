@@ -57,7 +57,7 @@
   $: productsArray = Object.entries(products).map(([id, product]) => ({ id, ...product }));
 
   function update提供済みCount(productId: string, delta: number, waiting: number) {
-    const countRef = ref(database, `products/${productId}/alreadyServed`)
+    const countRef = ref(database, `products/${productId}/alreadyServed`);
 
     runTransaction(countRef, (current) => {
       const newValue = (current || 0) + delta;
@@ -73,6 +73,22 @@
     : productsArray.filter(product => product.teamId === targetTeamId);
 
   $: zeroFilteredProductsArray = filteredProductsArray.filter(product => product.alreadyServed != product.order);
+
+  function ほんまに売り切れでええんか(productId: string) {
+    const result = confirm("ほんまに売り切れにしてええねんな？");
+    if (result) {
+      売り切れにする(productId);
+    } else {
+      alert("売り切れにするのをキャンセルしました");
+    }
+  }
+
+  function 売り切れにする(productId: string) {
+    const 売り切れRef = ref(database, `products/${productId}/spldOut`);
+    runTransaction(売り切れRef, (current) => {
+      return (!current);
+    });
+  }
 </script>
 
 <section>
@@ -80,15 +96,27 @@
   {#if (userRole !== null)}
     <div class='ok200'>
       <h2>待機中の注文一覧</h2>
-      <div>
+      <div class='list'>
         {#each zeroFilteredProductsArray as product (product.id)}
-          <button on:click={() => update提供済みCount((product.id), 1, (product.order))}>
-            <small>{product.teamId}</small>
-            <h3>{product.name}</h3>
-            <p>¥{product.price}</p>
-            <p>在庫：{product.maxOrder}個</p>
-            <p>待機中：{product.order - product.alreadyServed}個</p>
-          </button>
+          <div class='buttonSlot'>
+            <button class='plusButton' on:click={() => update提供済みCount((product.id), 1, (product.order))}>
+              <small>{product.teamId}</small>
+              <h3>{product.name}</h3>
+              <p>¥{product.price}</p>
+              <p>在庫：{product.maxOrder}個</p>
+              <p>状況：{#if (product.soldOut)}売り切れ{:else}在庫あり{/if}</p>
+              <p>待機中：
+                <span class='waitingNum'>{product.order - product.alreadyServed}</span>個
+              </p>
+            </button><br/>
+            <button class='売り切れボタン' on:click={() => ほんまに売り切れでええんか(product.id)}>
+              {#if (product.soldOut)}
+                売り切れを解除
+              {:else}
+                売り切れにする
+              {/if}
+            </button>
+          </div>
         {/each}
       </div>
     </div>
@@ -101,5 +129,31 @@
 </section>
 
 <style lang='scss'>
-
+  .ok200 {
+    .list {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .buttonSlot {
+        display: block;
+        .plusButton {
+          width: 250px;
+          height: 250px;
+          small, h3, p {
+            font-family: ZenMaru;
+          }
+          small, p {
+            font-size: 1em;
+          }
+          .waitingNum {
+            font-size: 50px;
+            color: red;
+          }
+        }
+        .売り切れボタン {
+          width: 250px;
+        }
+      }
+    }
+  }
 </style>
