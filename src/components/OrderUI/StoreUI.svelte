@@ -74,8 +74,16 @@
 
   $: zeroFilteredProductsArray = filteredProductsArray.filter(product => product.alreadyServed != product.order);
 
-  function ほんまに売り切れでええんか(productId: string) {
-    const result = confirm("ほんまに売り切れにしてええねんな？");
+  function ほんまに売り切れでええんか(productId: string, 売り切れか: boolean) {
+    let 確認メッセージ = 'ほんまに売り切れにしてええねんな？';
+    
+    if (売り切れか) {
+      確認メッセージ = '売り切れを解除しますか？'
+    } else {
+      確認メッセージ = 確認メッセージ;
+    }
+
+    const result = confirm(確認メッセージ);
     if (result) {
       売り切れにする(productId);
     } else {
@@ -84,7 +92,7 @@
   }
 
   function 売り切れにする(productId: string) {
-    const 売り切れRef = ref(database, `products/${productId}/spldOut`);
+    const 売り切れRef = ref(database, `products/${productId}/soldOut`);
     runTransaction(売り切れRef, (current) => {
       return (!current);
     });
@@ -109,7 +117,7 @@
                 <span class='waitingNum'>{product.order - product.alreadyServed}</span>個
               </p>
             </button><br/>
-            <button class='売り切れボタン' on:click={() => ほんまに売り切れでええんか(product.id)}>
+            <button class='売り切れボタン' on:click={() => ほんまに売り切れでええんか((product.id), (product.soldOut))}>
               {#if (product.soldOut)}
                 売り切れを解除
               {:else}
