@@ -22,19 +22,44 @@
   <section>
     <form on:submit|preventDefault={() => handleAuth()}>
       <label for="email">メールアドレス</label>
-      <input type="email" bind:value={email} required /><br/>
-      <label for="password">パスワード</label>
+      <br/>
+      <input type="email" bind:value={email} required /><br/><br/>
+      <label for="password">パスワード</label><br/>
       <input type="password" bind:value={password} required minlength="6" /><br/>
       {#if errorMessage}
         <p>{errorMessage}</p>
-      {/if}
-      <button type="submit">ログイン</button>
+      {/if} 
+      <div class='submitSlot'>
+        <button type="submit">ログイン</button>
+      </div>
     </form>
   </section>
 </div>
 
 <style lang='scss'>
-  form {
-    text-align: center;
+  section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    form {
+      flex-direction: column;
+      width: 500px;
+      max-width: 100%;
+      input {
+        width: 100%;
+        font-family: FiraCode;
+        font-size: 1.1em;
+      }
+      .submitSlot {
+        width: 100%;
+        justify-content: center;
+        display: flex;
+        button {
+          margin-top: 8px;
+          font-size: 1em;
+          font-family: ZenMaru;
+        }
+      }
+    }
   }
 </style>
