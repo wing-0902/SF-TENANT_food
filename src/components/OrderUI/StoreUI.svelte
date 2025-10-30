@@ -116,7 +116,7 @@
               <p>待機中：
                 <span class='waitingNum'>{product.order - product.alreadyServed}</span>個
               </p>
-            </button><br/>
+            </button>
             <button class='売り切れボタン' on:click={() => ほんまに売り切れでええんか((product.id), (product.soldOut))}>
               {#if (product.soldOut)}
                 売り切れを解除
@@ -144,22 +144,42 @@
       flex-wrap: wrap;
       .buttonSlot {
         display: block;
+        width: 250px;
+        margin: 0 5px;
+        --radius: 30px;
+
         .plusButton {
-          width: 250px;
+          width: 100%;
           height: 250px;
-          small, h3, p {
+          border-radius: var(--radius) var(--radius) 0 0;
+          h3, p {
             font-family: ZenMaru;
           }
+          small {
+            font-family: FiraCode;
+          }
+          h3 {
+            font-size: 1.5em;
+          }
+          h3, small, p {
+            margin: 0;
+          }
           small, p {
-            font-size: 1em;
+            font-size: 1.4em;
           }
           .waitingNum {
             font-size: 50px;
             color: red;
           }
+          margin: 0;
         }
         .売り切れボタン {
-          width: 250px;
+          width: 100%;
+          font-family: ZenMaru;
+          height: 40px;
+          border-radius: 0 0 var(--radius) var(--radius);
+          margin: 0;
+          font-size: 1.3em;
         }
       }
     }
