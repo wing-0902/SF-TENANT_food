@@ -108,7 +108,7 @@
                 {product.maxOrder - product.order}
               </td>
               <td
-                class:busy = {product.order - product.alreadyServed > 9}
+                class:busy = {product.alreadyServed - product.order <= -9}
               >
                 {product.order - product.alreadyServed}
               </td>
