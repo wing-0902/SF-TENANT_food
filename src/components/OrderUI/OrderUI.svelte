@@ -56,7 +56,11 @@
 
   $: productsArray = Object.entries(products).map(([id, product]) => ({ id, ...product }));
 
-  function updateOrderCount(productId: string, delta: number, alreadyServed: number) {
+  function updateOrderCount(productId: string, delta: number, alreadyServed: number, soldOut: boolean) {
+    if (soldOut) {
+      return;
+    };
+
     const countRef = ref(database, `products/${productId}/order`)
 
     const minValue = alreadyServed || 0; 
@@ -83,7 +87,8 @@
             <th>在庫数</th>
             <th>累計注文数</th>
             <th>累計提供数</th>
-            <th>状況</th>
+            <th>残在庫</th>
+            <th>待機中</th>
             <th colspan='2'>注文数操作</th>
           </tr>
         </thead>
@@ -96,14 +101,26 @@
               <td>{product.maxOrder}</td>
               <td>{product.order}</td>
               <td>{product.alreadyServed}</td>
-              <td>あとで書くから待って</td>
+              <td
+                class:stock-low={product.maxOrder - product.order <= 70}
+                class:残りほとんどない={product.maxOrder - product.order <= 15}
+              >
+                {product.maxOrder - product.order}
+              </td>
+              <td>{product.order - product.alreadyServed}</td>
               <td>
-                <button on:click={() => updateOrderCount((product.id), -1, (product.alreadyServed))}>
+                <button
+                  disabled={product.soldOut}
+                  on:click={() => updateOrderCount((product.id), -1, (product.alreadyServed), (product.soldOut))}
+                >
                   ↓
                 </button>
               </td>
               <td>
-                <button on:click={() => updateOrderCount((product.id), 1, (product.alreadyServed))}>
+                <button
+                  disabled={product.soldOut}
+                  on:click={() => updateOrderCount((product.id), 1, (product.alreadyServed), (product.soldOut))}
+                >
                   ↑
                 </button>
               </td>
@@ -134,6 +151,15 @@
             width: 100%;
             height: 40px;
             border: none;
+          }
+        }
+        td {
+          &.stock-low {
+            background-color: rgb(255, 234, 0);
+          }
+          &.残りほとんどない {
+            background-color: rgb(145, 0, 0);
+            color: white;
           }
         }
       }
