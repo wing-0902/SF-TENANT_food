@@ -124,8 +124,18 @@
   .ok200 {
     table {
       border: 1px solid black;
-      th, td {
-        border: 1px solid black;
+      tr {
+        height: 40px;
+        th, td {
+          border: 1px solid black;
+        }
+        td {
+          button {
+            width: 100%;
+            height: 40px;
+            border: none;
+          }
+        }
       }
     }
   }
