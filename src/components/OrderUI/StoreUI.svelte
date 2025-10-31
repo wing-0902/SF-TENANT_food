@@ -111,7 +111,7 @@
               <small>{product.teamId}</small>
               <h3>{product.name}</h3>
               <p>¥{product.price}</p>
-              <p>在庫：{product.maxOrder}個</p>
+              <p>残在庫：{product.maxOrder - product.order}個</p>
               <p>状況：{#if (product.soldOut)}売り切れ{:else}在庫あり{/if}</p>
               <p>待機中：
                 <span class='waitingNum'>{product.order - product.alreadyServed}</span>個
