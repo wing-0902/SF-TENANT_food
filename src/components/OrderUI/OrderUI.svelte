@@ -107,7 +107,11 @@
               >
                 {product.maxOrder - product.order}
               </td>
-              <td>{product.order - product.alreadyServed}</td>
+              <td
+                class:busy = {product.order - product.alreadyServed > 9}
+              >
+                {product.order - product.alreadyServed}
+              </td>
               <td>
                 <button
                   disabled={product.soldOut}
@@ -154,7 +158,8 @@
           }
         }
         td {
-          &.stock-low {
+          &.stock-low,
+          &.busy {
             background-color: rgb(255, 234, 0);
           }
           &.残りほとんどない {
