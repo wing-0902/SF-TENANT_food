@@ -72,7 +72,20 @@
     ? productsArray
     : productsArray.filter(product => product.teamId === targetTeamId);
 
-  $: zeroFilteredProductsArray = filteredProductsArray.filter(product => product.alreadyServed != product.order);
+  $: filteredProductsArray.sort((a, b) => {
+    const conditionA = a.alreadyServed !== a.order;
+    const conditionB = b.alreadyServed !== b.order;
+
+    if (conditionA && !conditionB) {
+      return -1;
+    }
+
+    if (!conditionA && conditionB) {
+      return 1;
+    }
+
+    return 0;
+  });
 
   function ほんまに売り切れでええんか(productId: string, 売り切れか: boolean) {
     let 確認メッセージ = 'ほんまに売り切れにしてええねんな？';
@@ -105,8 +118,14 @@
     <div class='ok200'>
       <h2>待機中の注文一覧</h2>
       <div class='list'>
-        {#each zeroFilteredProductsArray as product (product.id)}
-          <div class='buttonSlot'>
+        {#each filteredProductsArray as product (product.id)}
+          <div
+            class='buttonSlot'
+            class:stock-low={product.maxOrder - product.order <= 70}
+            class:残りほとんどない={product.maxOrder - product.order <= 15}
+            class:売り切れ={product.soldOut === true}
+            class:待機なし={product.order - product.alreadyServed === 0}
+          >
             <button class='plusButton' on:click={() => update提供済みCount((product.id), 1, (product.order))}>
               <small>{product.teamId}</small>
               <h3>{product.name}</h3>
@@ -148,6 +167,32 @@
         margin: 0 5px;
         --radius: 30px;
 
+        &.stock-low {
+          button {
+            background-color: rgb(255, 234, 0);
+          }
+        }
+        &.残りほとんどない {
+          button {
+            background-color: rgb(145, 0, 0);
+            color: white;
+            .waitingNum {
+              color: yellow;
+            }
+          }
+        }
+        &.売り切れ {
+          button {
+            background-color: black;
+            color: white;
+            .waitingNum {
+              color: orange;
+            }
+          }
+        }
+        &.待機なし {
+          opacity: 0.3;
+        }
         .plusButton {
           width: 100%;
           height: 250px;
